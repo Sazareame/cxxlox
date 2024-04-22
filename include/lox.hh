@@ -9,7 +9,8 @@ class Lox{
 public:
   static bool had_error;
 
-  static void run_file(char const* path){
+  static void
+	run_file(char const* path){
     auto f = std::ifstream(path);
     if(!f.is_open()){
       puts("error during open source file.");
@@ -21,7 +22,8 @@ public:
 		getchar();
   }
 
-  static void run_prompt(){
+  static void
+	run_prompt(){
     std::string line;
     std::cout << "> ";
     while(std::getline(std::cin, line)){
@@ -32,7 +34,8 @@ public:
   }
 
 private:
-  static void run(std::string_view source){
+  static void
+	run(std::string_view source){
 		Scanner scanner(source);
 		auto tokens = scanner.scan_tokens();
 		Parser parser(tokens);
@@ -49,7 +52,8 @@ private:
   }
 
 public:
-	static void report(std::string_view msg){
+	static void
+	report(std::string_view msg){
 		had_error = true;
 		std::cout << msg << std::endl;
 	}

@@ -123,7 +123,8 @@ public:
 
 	Object call(std::vector<Object> const& args)override;
 
-	int arity()const override{
+	int
+	arity()const override{
 		return _arity;
 	}
 	std::stringstream to_stringstream()const override;
@@ -137,15 +138,18 @@ class BuiltinFunc: public Callable{
 public:
 	BuiltinFunc(F _body, int _arity): body(_body), func_arity(_arity){}
 
-	int arity()const override{
+	int
+	arity()const override{
 		return func_arity;
 	}
 
-	Object call(std::vector<Object> const& args)override{
+	Object
+	call(std::vector<Object> const& args)override{
 		return Object(body());
 	}
 
-	std::stringstream to_stringstream()const override{
+	std::stringstream
+	to_stringstream()const override{
 		std::stringstream ss;
 		ss << "<Builtin Function>";
 		return ss;
@@ -165,7 +169,8 @@ public:
 	Token(Token const& other):
 		type(other.type), lexeme(other.lexeme), literal(other.literal), line(other.line){}
 
-	Token& operator=(Token const& other){
+	Token&
+	operator=(Token const& other){
 		if(this == &other) return *this;
 		type = other.type;
 		lexeme = other.lexeme;
@@ -174,7 +179,8 @@ public:
 		return *this;
 	}
 
-	friend std::ostream& operator<<(std::ostream& os, Token const& self){
+	friend std::ostream&
+	operator<<(std::ostream& os, Token const& self){
 		os << enum_table[static_cast<int>(self.type)] << " " << self.lexeme << " " << self.literal.to_stringstream().str() << " " << self.line;
 		return os;
 	}

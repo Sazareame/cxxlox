@@ -3,29 +3,34 @@
 
 extern std::shared_ptr<Environ> global_env;
 
-inline static std::string op_error(TokenPtr op, std::string_view msg){
+inline static std::string
+op_error(TokenPtr op, std::string_view msg){
 	std::stringstream ss;
 	ss << "line " << op->line << ": Operands of " << op->lexeme << " " << msg;
 	return ss.str();
 }
 
-inline static bool check_addtion(TokenPtr op, Object const& lhs, Object const& rhs){
+inline static bool
+check_addtion(TokenPtr op, Object const& lhs, Object const& rhs){
 	if(lhs.has_type<double>() && rhs.has_type<double>()) return true;
 	if(lhs.has_type<std::string>() && rhs.has_type<std::string>()) return false;
 	throw op_error(op, "must be number or string.");
 }
 
-inline static void check_operands(TokenPtr op, Object const& lhs, Object const& rhs){
+inline static void
+check_operands(TokenPtr op, Object const& lhs, Object const& rhs){
 	if(lhs.has_type<double>() && rhs.has_type<double>()) return;
 	throw op_error(op, "must be number.");
 }
 
-inline static void check_operand(TokenPtr op, Object const& hs){
+inline static void
+check_operand(TokenPtr op, Object const& hs){
 	if(hs.has_type<double>()) return;
 	throw op_error(op, "must be number.");
 }
 
-Object Binary::evaluate(){
+Object
+Binary::evaluate(){
 	auto lhs = left->evaluate();
 	auto rhs = right->evaluate();
 	if(oper->type == TokenType::PLUS){
@@ -48,15 +53,18 @@ Object Binary::evaluate(){
 	}
 }
 
-Object Literal::evaluate(){
+Object
+Literal::evaluate(){
 	return lexeme;
 }
 
-Object Grouping::evaluate(){
+Object
+Grouping::evaluate(){
 	return expression->evaluate();
 }
 
-Object Unary::evaluate(){
+Object
+Unary::evaluate(){
 	auto rhs = right->evaluate();
 	if(oper->type == TokenType::MINUS){
 		check_operand(oper, rhs);
@@ -67,17 +75,20 @@ Object Unary::evaluate(){
 	}
 }
 
-Object Variable::evaluate(){
+Object
+Variable::evaluate(){
 	return global_env->get(name);
 }
 
-Object Assign::evaluate(){
+Object
+Assign::evaluate(){
 	auto res = value->evaluate();
 	global_env->assign(name, res);
 	return res;
 }
 
-Object Logical::evaluate(){
+Object
+Logical::evaluate(){
 	auto left_value = left->evaluate();
 	if(oper->type == TokenType::OR){
 		if(left_value.is_true())
@@ -89,7 +100,8 @@ Object Logical::evaluate(){
 	return right->evaluate();
 }
 
-Object Call::evaluate(){
+Object
+Call::evaluate(){
 	auto _caller = callee->evaluate();
 	std::vector<Object> args{};
 	for(auto const& arg : arguments)
@@ -110,13 +122,15 @@ Object Call::evaluate(){
 	return caller->call(args);
 }
 
-void Var::execute(){
+void
+Var::execute(){
 	Object value = Object();
 	if(expr) value = expr->evaluate();
 	global_env->define(name->lexeme, value);
 }
 
-void BlockStmt::execute(){
+void
+BlockStmt::execute(){
 	std::shared_ptr<Environ> previous = global_env;
 	try{
 		global_env = std::make_shared<Environ>(global_env);
@@ -131,7 +145,8 @@ void BlockStmt::execute(){
 	global_env = previous;
 }
 
-void IfStmt::execute(){
+void
+IfStmt::execute(){
 	if(condition->evaluate().is_true())
 		then->execute();
 	else if(els)
@@ -139,17 +154,20 @@ void IfStmt::execute(){
 	return;
 }
 
-void WhileStmt::execute(){
+void
+WhileStmt::execute(){
 	while(condition->evaluate().is_true())
 		body->execute();
 }
 
-void FuncDefinition::execute(){
+void
+FuncDefinition::execute(){
 	Object value = Object(std::shared_ptr<Callable>(new FuncType(this, global_env)));
 	global_env->define(name->lexeme, value);
 }
 
-void RetStmt::execute(){
+void
+RetStmt::execute(){
 	Object ret = ret_value ? ret_value->evaluate() : Object();
 	throw ret;
 }

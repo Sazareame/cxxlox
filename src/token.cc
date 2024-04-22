@@ -4,7 +4,8 @@
 
 extern std::shared_ptr<Environ> global_env;
 
-std::stringstream Object::to_stringstream() const{
+std::stringstream
+Object::to_stringstream() const{
 	if(has_type<CallablePtr>()){
 		auto& ptr = std::get<CallablePtr>(data.value());
 		return ptr->to_stringstream();
@@ -21,7 +22,8 @@ FuncType::FuncType(FuncDefinition* _def, std::shared_ptr<Environ> _closure): def
 	_arity = _def->params.size();
 }
 
-Object FuncType::call(std::vector<Object> const& args){
+Object
+FuncType::call(std::vector<Object> const& args){
 	std::shared_ptr<Environ> previous = global_env;
 	global_env = std::make_shared<Environ>(closure);
 	for(int i = 0; i < _arity; ++i)
@@ -36,7 +38,8 @@ Object FuncType::call(std::vector<Object> const& args){
 	return Object();
 }
 
-std::stringstream FuncType::to_stringstream()const{
+std::stringstream
+FuncType::to_stringstream()const{
 	std::stringstream ss;
 	ss << "<function object " << def->name->lexeme << ">";
 	return ss;

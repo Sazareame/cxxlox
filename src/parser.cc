@@ -1,7 +1,8 @@
 #include "parser.hh"
 #include "lox.hh"
 
-StmtPtr Parser::declaration(){
+StmtPtr 
+Parser::declaration(){
 	StmtPtr res = nullptr;
 	try{
 		if(is_match(TokenType::VAR))
@@ -18,7 +19,9 @@ StmtPtr Parser::declaration(){
 	}
 	return res;
 }
- StmtPtr Parser::func_def(){
+
+StmtPtr
+Parser::func_def(){
 	auto name = consume(TokenType::IDENTIFIER, "Expect function name.");
 	consume(TokenType::LEFT_PAREN, "Expect `(` before function name.");
 	std::vector<TokenPtr> parameters{};
@@ -35,7 +38,8 @@ StmtPtr Parser::declaration(){
 	return std::shared_ptr<Stmt>(new FuncDefinition(name, parameters, body));
 }
 
-ExprPtr Parser::assignment(){
+ExprPtr
+Parser::assignment(){
 	auto expr = orr();
 	if(is_match(TokenType::EQUAL)){
 		auto equals = previous();
@@ -49,7 +53,8 @@ ExprPtr Parser::assignment(){
 	return expr;
 }
 
-ExprPtr Parser::orr(){
+ExprPtr
+Parser::orr(){
 	auto expr = andd();
 	while(is_match(TokenType::OR)){
 		auto oper = previous();
@@ -59,7 +64,8 @@ ExprPtr Parser::orr(){
 	return expr;
 }
 
-ExprPtr Parser::andd(){
+ExprPtr
+Parser::andd(){
 	auto expr = equlity();
 	while(is_match(TokenType::AND)){
 		auto oper = previous();
@@ -69,7 +75,8 @@ ExprPtr Parser::andd(){
 	return expr;
 }
 
-StmtPtr Parser::for_stmt(){
+StmtPtr
+Parser::for_stmt(){
 	consume(TokenType::LEFT_PAREN, "Expect `(` after keyword for.");
 	StmtPtr initializer = nullptr;
 	if(is_match(TokenType::SEMICOLON));
@@ -105,7 +112,8 @@ StmtPtr Parser::for_stmt(){
 	return body;
 }
 
-ExprPtr Parser::equlity(){
+ExprPtr
+Parser::equlity(){
 	auto expr = comparision();
 	ExprPtr right = nullptr;
 	while(is_match(TokenType::BANG_EQUAL, TokenType::EQUAL_EQUAL)){
@@ -116,7 +124,8 @@ ExprPtr Parser::equlity(){
 	return expr;
 }
 
-ExprPtr Parser::comparision(){
+ExprPtr
+Parser::comparision(){
 	auto expr = term();
 	ExprPtr right = nullptr;
 	while(is_match(TokenType::GREATER, TokenType::GREATER_EQUAL, TokenType::LESS, TokenType::LESS_EQUAL)){
@@ -127,7 +136,8 @@ ExprPtr Parser::comparision(){
 	return expr;
 }
 
-ExprPtr Parser::term(){
+ExprPtr
+Parser::term(){
 	auto expr = factor();
 	ExprPtr right = nullptr;
 	while(is_match(TokenType::MINUS, TokenType::PLUS)){
@@ -138,7 +148,8 @@ ExprPtr Parser::term(){
 	return expr;
 }
 
-ExprPtr Parser::factor(){
+ExprPtr
+Parser::factor(){
 	auto expr = unary();
 	ExprPtr right = nullptr;
 	while(is_match(TokenType::SLASH, TokenType::STAR)){
@@ -149,7 +160,8 @@ ExprPtr Parser::factor(){
 	return expr;
 }
 
-ExprPtr Parser::unary(){
+ExprPtr
+Parser::unary(){
 	if(is_match(TokenType::BANG, TokenType::MINUS)){
 		auto operat = previous();
 		auto right = unary();
@@ -158,7 +170,8 @@ ExprPtr Parser::unary(){
 	return call();
 }
 
-ExprPtr Parser::call(){
+ExprPtr
+Parser::call(){
 	auto expr = primary();
 	for(;;){
 		if(is_match(TokenType::LEFT_PAREN))
@@ -169,7 +182,8 @@ ExprPtr Parser::call(){
 	return expr;
 }
 
-ExprPtr Parser::to_call(ExprPtr callee){
+ExprPtr
+Parser::to_call(ExprPtr callee){
 	std::vector<ExprPtr> args{};
 	if(!check(TokenType::RIGHT_PAREN)){
 		do{
@@ -183,7 +197,8 @@ ExprPtr Parser::to_call(ExprPtr callee){
 	return std::shared_ptr<Expr>(new Call(callee, paren, args));
 }
 
-ExprPtr Parser::primary(){
+ExprPtr
+Parser::primary(){
 	if(is_match(TokenType::FALSE))
 		return std::shared_ptr<Expr>(new Literal(false));
 	if(is_match(TokenType::TRUE))
@@ -202,14 +217,16 @@ ExprPtr Parser::primary(){
 	throw error(peek(), "Expect expression.");
 }
 
-TokenPtr Parser::consume(TokenType type, std::string_view msg){
+TokenPtr
+Parser::consume(TokenType type, std::string_view msg){
 	if(check(type))
 		return advance();
 	else
 		throw error(peek(), msg);
 }
 
-std::string Parser::error(TokenPtr token, std::string_view msg)const{
+std::string
+Parser::error(TokenPtr token, std::string_view msg)const{
 	std::stringstream ss;
 	if(token->type == TokenType::EEOF)
 		ss << "line " << token->line << " at the end: " << msg;

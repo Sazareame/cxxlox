@@ -1,7 +1,8 @@
 #include "scanner.hh"
 #include "lox.hh"
 
-void Scanner::string(void){
+void
+Scanner::string(void){
 	while(peek() != '"' && !is_at_end()){
 		if(peek() == '\n') ++line;
 		advance();
@@ -17,7 +18,8 @@ void Scanner::string(void){
 	add_token(TokenType::STRING, Object(s));
 }
 
-void Scanner::number(void){
+void
+Scanner::number(void){
 	while(is_digit(peek())) advance();
 	if(peek() == '.' && is_digit(peek_next())){
 		advance();
@@ -27,7 +29,8 @@ void Scanner::number(void){
 	add_token(TokenType::NUMBER, Object(num));
 }
 
-void Scanner::identifier(void){
+void
+Scanner::identifier(void){
 	while(is_alphanumeric(peek())) advance();
 	auto text = source.substr(start, current - start);
 	auto p = key_words.find(std::string(text));
@@ -35,7 +38,8 @@ void Scanner::identifier(void){
 	else add_token(TokenType::IDENTIFIER);
 }
 
-void Scanner::scan_token(void){
+void
+Scanner::scan_token(void){
 	char c = advance();
 	switch(c){
 		case '(': add_token(TokenType::LEFT_PAREN); break;
@@ -76,7 +80,8 @@ void Scanner::scan_token(void){
 	}
 }
 
-std::vector<TokenPtr> Scanner::scan_tokens(){
+std::vector<TokenPtr>
+Scanner::scan_tokens(){
 	while(!is_at_end()){
 		start = current;
 		scan_token();

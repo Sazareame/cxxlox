@@ -16,7 +16,9 @@ class PrintStmt: public Stmt{
 
 public:
 	PrintStmt(ExprPtr _expr): expr(_expr){}
-	void execute()override{
+
+	void
+	execute()override{
 		auto value = expr->evaluate();
 		std::cout << value.to_stringstream().str() << std::endl;
 	}
@@ -27,7 +29,9 @@ class ExprStmt: public Stmt{
 
 public:
 	ExprStmt(ExprPtr _expr): expr(_expr){}
-	void execute()override{
+
+	void
+	execute()override{
 		expr->evaluate();
 	}
 };
@@ -92,7 +96,8 @@ public:
 	void execute()override;
 };
 
-inline void interpreter(std::vector<StmtPtr> const& stmts){
+inline void
+interpreter(std::vector<StmtPtr> const& stmts){
 	for(auto const& stmt : stmts)
 		stmt->execute();
 }

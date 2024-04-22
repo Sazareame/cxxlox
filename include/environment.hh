@@ -10,11 +10,14 @@ public:
 
 	Environ() = default;
 	Environ(std::shared_ptr<Environ> _enclosing): enclosing(_enclosing){}
-	void define(std::string const& name, Object const& value){
+
+	void
+	define(std::string const& name, Object const& value){
 		values.insert({name, value});
 	}
 
-	Object const& get(TokenPtr name){
+	Object const& 
+	get(TokenPtr name){
 		if(auto res = values.find(name->lexeme); res != values.end())
 			return res->second;
 		if(enclosing) return enclosing->get(name);
@@ -23,7 +26,8 @@ public:
 		throw ss.str();
 	}
 
-	void assign(TokenPtr name, Object const& value){
+	void 
+	assign(TokenPtr name, Object const& value){
 		if(auto res = values.find(name->lexeme); res != values.end()){
 			values[name->lexeme] = value;
 			return;
