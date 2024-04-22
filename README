@@ -1,0 +1,9 @@
+This is an cxx implementation for the book crafting interpreter, which aims to build an interpreter for a light language, Lox.
+
+Intro to Lox:
+Lox is a dynamic-type language.
+Object Type: Number, Boolean, String, and Nil.
+Supported Operator: All operators in C except `?`, `,`.
+Statement: while stmt, for stmt, if stmt etc, all of those are C-formed. Lox does not have goto and do-while stmt.
+Functional: Function is one-level class in Lox. Closure is Supported, however, no lambda expression or anonymous function.
+OO: class, inherit, and polymorphism.
