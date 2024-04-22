@@ -19,6 +19,9 @@ aux_source_directory(src SRC)
 # Add source to this project's executable.
 add_executable (cxxlox  ${SRC})
 target_include_directories(cxxlox PUBLIC include)
+if(UNIX)
+	set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
+endif()
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET cxxlox PROPERTY CXX_STANDARD 20)

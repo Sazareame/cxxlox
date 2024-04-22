@@ -3,3 +3,4 @@ out/
 CMakePresets.json
 build/
 test/
+cxxlox
