@@ -17,13 +17,13 @@ std::stringstream Object::to_stringstream() const{
 	return ss;
 }
 
-FuncType::FuncType(FuncDefinition* _def): def(_def){
+FuncType::FuncType(FuncDefinition* _def, std::shared_ptr<Environ> _closure): def(_def), closure(_closure){
 	_arity = _def->params.size();
 }
 
 Object FuncType::call(std::vector<Object> const& args){
 	std::shared_ptr<Environ> previous = global_env;
-	global_env = std::make_shared<Environ>(global_env);
+	global_env = std::make_shared<Environ>(closure);
 	for(int i = 0; i < _arity; ++i)
 		global_env->define(def->params[i]->lexeme, args[i]);
 	try{

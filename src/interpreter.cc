@@ -145,7 +145,7 @@ void WhileStmt::execute(){
 }
 
 void FuncDefinition::execute(){
-	Object value = Object(std::shared_ptr<Callable>(new FuncType(this)));
+	Object value = Object(std::shared_ptr<Callable>(new FuncType(this, global_env)));
 	global_env->define(name->lexeme, value);
 }
 

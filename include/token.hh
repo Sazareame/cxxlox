@@ -101,6 +101,7 @@ template<> inline Object::Object(int _data){
 }
 
 class FuncDefinition;
+class Environ;
 
 class Callable{
 public:
@@ -115,8 +116,10 @@ typedef std::shared_ptr<Callable> CallablePtr;
 class FuncType: public Callable{
 	FuncDefinition* def;
 	int _arity;
+	std::shared_ptr<Environ> closure;
+
 public:
-	FuncType(FuncDefinition* _def);
+	FuncType(FuncDefinition* _def, std::shared_ptr<Environ> _closure);
 
 	Object call(std::vector<Object> const& args)override;
 
