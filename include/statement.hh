@@ -6,6 +6,7 @@
 class Stmt{
 public:
 	virtual void execute() = 0;
+	virtual void resolve() = 0;
 	virtual ~Stmt() = default;
 };
 
@@ -22,6 +23,7 @@ public:
 		auto value = expr->evaluate();
 		std::cout << value.to_stringstream().str() << std::endl;
 	}
+	void resolve()override;
 };
 
 class ExprStmt: public Stmt{
@@ -34,6 +36,7 @@ public:
 	execute()override{
 		expr->evaluate();
 	}
+	void resolve()override;
 };
 
 class Var: public Stmt{
@@ -43,6 +46,7 @@ class Var: public Stmt{
 public:
 	Var(TokenPtr _name, ExprPtr _expr): name(_name), expr(_expr){}
 	void execute()override;
+	void resolve()override;
 };
 
 class BlockStmt: public Stmt{
@@ -53,6 +57,7 @@ public:
 		stmts.swap(_stmts);
 	}
 	void execute()override;
+	void resolve()override;
 };
 
 class IfStmt: public Stmt{
@@ -63,6 +68,7 @@ class IfStmt: public Stmt{
 public:
 	IfStmt(ExprPtr _condition, StmtPtr _then, StmtPtr _els): condition(_condition), then(_then), els(_els){}
 	void execute()override;
+	void resolve()override;
 };
 
 class WhileStmt: public Stmt{
@@ -72,6 +78,7 @@ class WhileStmt: public Stmt{
 public:
 	WhileStmt(ExprPtr _condition, StmtPtr _body): condition(_condition), body(_body){}
 	void execute()override;
+	void resolve()override;
 };
 
 class FuncDefinition: public Stmt{
@@ -85,6 +92,7 @@ public:
 		params.swap(_params);
 	}
 	void execute()override;
+	void resolve()override;
 };
 
 class RetStmt: public Stmt{

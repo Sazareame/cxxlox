@@ -7,6 +7,7 @@ class Expr{
 public:
 	// virtual std::string ast_print() = 0;
 	virtual Object evaluate() = 0;
+	virtual void resolve() = 0;
 	virtual ~Expr() = default;
 };
 
@@ -28,6 +29,7 @@ public:
 	// }
 
 	Object evaluate()override;
+	void resolve()override;
 };
 
 class Grouping: public Expr{
@@ -40,6 +42,7 @@ public:
 	// 	return parenthesis("group", std::vector<ExprPtr>{expression});
 	// }
 	Object evaluate()override;
+	void resolve()override;
 };
 
 class Literal: public Expr{
@@ -59,6 +62,7 @@ public:
 	// 	return lexeme.to_stringstream().str();
 	// }
 	Object evaluate()override;
+	void resolve()override;
 };
 
 class Unary: public Expr{
@@ -73,6 +77,7 @@ public:
 	// 	return parenthesis(oper.lexeme, std::vector<ExprPtr>{right});
 	// }
 	Object evaluate()override;
+	void resolve()override;
 };
 
 class Variable: public Expr{
@@ -83,6 +88,7 @@ public:
 	// std::string ast_print() override;
 
 	Object evaluate()override;
+	void resolve()override;
 
 	TokenPtr get_name()const{
 		return name;
@@ -96,6 +102,7 @@ class Assign: public Expr{
 public:
 	Assign(TokenPtr _name, ExprPtr _value): name(_name), value(_value){}
 	Object evaluate()override;
+	void resolve()override;
 };
 
 class Logical: public Expr{
@@ -106,6 +113,7 @@ class Logical: public Expr{
 public:
 	Logical(ExprPtr _left, TokenPtr _oper, ExprPtr _right): left(_left), oper(_oper), right(_right){}
 	Object evaluate()override;
+	void resolve()override;
 };
 
 class Call: public Expr{
@@ -118,6 +126,7 @@ public:
 		arguments.swap(_arguments);
 	}
 	Object evaluate()override;
+	void resolve()override;
 };
 
 // inline std::string parenthesis(std::string const& name, std::vector<ExprPtr> const& exprs){

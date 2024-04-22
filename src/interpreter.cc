@@ -1,29 +1,30 @@
 #include "statement.hh"
 #include "environment.hh"
+#include "resolver.hh"
 
 extern std::shared_ptr<Environ> global_env;
 
-inline static std::string
+static std::string
 op_error(TokenPtr op, std::string_view msg){
 	std::stringstream ss;
 	ss << "line " << op->line << ": Operands of " << op->lexeme << " " << msg;
 	return ss.str();
 }
 
-inline static bool
+static bool
 check_addtion(TokenPtr op, Object const& lhs, Object const& rhs){
 	if(lhs.has_type<double>() && rhs.has_type<double>()) return true;
 	if(lhs.has_type<std::string>() && rhs.has_type<std::string>()) return false;
 	throw op_error(op, "must be number or string.");
 }
 
-inline static void
+static void
 check_operands(TokenPtr op, Object const& lhs, Object const& rhs){
 	if(lhs.has_type<double>() && rhs.has_type<double>()) return;
 	throw op_error(op, "must be number.");
 }
 
-inline static void
+static void
 check_operand(TokenPtr op, Object const& hs){
 	if(hs.has_type<double>()) return;
 	throw op_error(op, "must be number.");
@@ -77,7 +78,11 @@ Unary::evaluate(){
 
 Object
 Variable::evaluate(){
-	return global_env->get(name);
+	if(auto dist_p = Resolver::locals.find(this); dist_p != Resolver::locals.end()){
+		return global_env->get_at(*dist_p, name->lexeme);
+	} else{
+		return global_env->get(name);
+	}
 }
 
 Object

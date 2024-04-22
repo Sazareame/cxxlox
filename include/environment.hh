@@ -40,4 +40,20 @@ public:
 		ss << "Undefined variable " << name->lexeme << ".";
 		throw ss.str();
 	}
+
+	Object const&
+	get_at(int dist, std::string const& name){
+		return ancestor(dist)->values[name];
+	}
+
+private:
+
+	Environ*
+	ancestor(int dist){
+		auto res = this;
+		for(int i = 0; i < dist; ++i){
+			res = res->enclosing.get();
+		}
+		return res;
+	}
 };
