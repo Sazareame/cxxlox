@@ -19,6 +19,7 @@ std::shared_ptr<Environ> global_env{new Environ()};
 
 decltype(Resolver::scopes) Resolver::scopes{};
 decltype(Resolver::locals) Resolver::locals{};
+Resolver::FunctionType Resolver::current_func = Resolver::FunctionType::NONE;
 
 auto builtin_clock_body = [](){return static_cast<double>(time(0));};
 auto builtin_clock = Object(std::shared_ptr<Callable>(new BuiltinFunc(builtin_clock_body, 0)));

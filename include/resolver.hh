@@ -3,6 +3,7 @@
 #include "stdafx.hh"
 #include "token.hh"
 #include <memory>
+#include <sstream>
 
 class Expr;
 class Stmt;
@@ -10,6 +11,11 @@ class Stmt;
 class Resolver{
 public:
 
+enum FunctionType{
+	NONE, FUNCTION
+};
+
+static FunctionType current_func;
 static std::deque<std::unordered_map<std::string, bool> > scopes;
 static std::unordered_map<Expr*, unsigned> locals;
 
@@ -32,7 +38,7 @@ declare(TokenPtr name){
 	if(scopes.empty()) return;
 	auto& scope = scopes.back();
 	if(scope.count(name->lexeme) == 1){
-		error(name, " is already declared.");
+		error(name->line, name, "variable has already been declared.");
 	}
 	scope.insert({name->lexeme, false});
 }
@@ -56,9 +62,10 @@ resolve_loacl_var(Expr* expr, TokenPtr name){
 }
 
 static void
-error(TokenPtr token, std::string const& msg){
-	std::string err = token->lexeme + msg;
-	throw err;
+error(size_t line, TokenPtr token, std::string const& msg){
+	std::stringstream ss;
+	ss << "line " << line << " at " << token->lexeme << ": " << msg;
+	throw ss.str();
 }
 
 static void

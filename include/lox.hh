@@ -20,7 +20,9 @@ public:
     std::stringstream ss;
     ss << f.rdbuf();
     run(ss.str());
+#ifdef _WIN32
 		getchar();
+#endif
   }
 
   static void

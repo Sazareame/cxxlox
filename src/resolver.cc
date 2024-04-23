@@ -46,6 +46,10 @@ void
 FuncDefinition::resolve(){
 	Resolver::declare(name);
 	Resolver::define(name);
+
+	auto enclong_func = Resolver::current_func;
+	Resolver::current_func = Resolver::FunctionType::FUNCTION;
+
 	Resolver::begin_scope();
 	for(auto const& param : params){
 		Resolver::declare(param);
@@ -53,6 +57,14 @@ FuncDefinition::resolve(){
 	}
 	body->resolve();
 	Resolver::end_scope();
+	Resolver::current_func = enclong_func;
+}
+
+void
+RetStmt::resolve(){
+	if(Resolver::current_func == Resolver::FunctionType::NONE){
+		Resolver::error(keyword->line, keyword, "Return statement is not allowed here");
+	}
 }
 
 void
