@@ -42,14 +42,13 @@ private:
 		Scanner scanner(source);
 		auto tokens = scanner.scan_tokens();
 		Parser parser(tokens);
+		auto stmts = parser.parse();
+		if(Lox::had_error) return;
 		try{
-			auto stmts = parser.parse();
-      // initialize Resolver
       Resolver::resolve(stmts);
 			// std::cout << expression->ast_print();
 			// if parser error occured, stmts could contains nullptr, which may result in violation during interpreting.
 			// also, interpreter is not allowed since the script already has syntax error.
-			if(Lox::had_error) return;
 			interpreter(stmts);
 		}catch(std::string e){
 			Lox::report(e);
