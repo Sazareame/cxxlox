@@ -1,5 +1,6 @@
 out/
 .vs/
+.vscode/
 CMakePresets.json
 build/
 test/

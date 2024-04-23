@@ -29,6 +29,7 @@ end_scope(){
 // label the identifier false, which means it is undefined
 static void
 declare(TokenPtr name){
+	if(scopes.empty()) return;
 	auto& scope = scopes.back();
 	if(scope.count(name->lexeme) == 1){
 		error(name, " is already declared.");

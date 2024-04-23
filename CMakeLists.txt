@@ -16,6 +16,8 @@ project(
 
 aux_source_directory(src SRC)
 
+set(CMAKE_BUILD_TYPE "Debug")
+
 # Add source to this project's executable.
 add_executable (cxxlox  ${SRC})
 target_include_directories(cxxlox PUBLIC include)
