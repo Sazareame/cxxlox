@@ -102,6 +102,7 @@ class RetStmt: public Stmt{
 public:
 	RetStmt(TokenPtr _keyword, ExprPtr _value): keyword(_keyword), ret_value(_value){}
 	void execute()override;
+	void resolve()override{};
 };
 
 inline void

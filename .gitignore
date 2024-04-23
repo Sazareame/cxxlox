@@ -4,3 +4,4 @@ CMakePresets.json
 build/
 test/
 cxxlox
+compile_flags.txt

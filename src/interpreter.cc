@@ -79,7 +79,7 @@ Unary::evaluate(){
 Object
 Variable::evaluate(){
 	if(auto dist_p = Resolver::locals.find(this); dist_p != Resolver::locals.end()){
-		return global_env->get_at(*dist_p, name->lexeme);
+		return global_env->get_at(dist_p->second, name->lexeme);
 	} else{
 		return global_env->get(name);
 	}
@@ -88,6 +88,11 @@ Variable::evaluate(){
 Object
 Assign::evaluate(){
 	auto res = value->evaluate();
+	if(auto dist_p = Resolver::locals.find(this); dist_p != Resolver::locals.end()){
+		global_env->assign_at(dist_p->second, name, res);
+	}else{
+		global_env->assign(name, res);
+	}
 	global_env->assign(name, res);
 	return res;
 }
@@ -145,7 +150,7 @@ BlockStmt::execute(){
 	} catch(std::string e){
 		// var table should be recovered into its origin.
 		global_env = previous;
-		throw e;
+		throw std::move(e);
 	}
 	global_env = previous;
 }

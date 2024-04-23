@@ -2,8 +2,10 @@
 
 #include "stdafx.hh"
 #include "token.hh"
+#include <memory>
 
 class Expr;
+class Stmt;
 
 class Resolver{
 public:
@@ -28,6 +30,9 @@ end_scope(){
 static void
 declare(TokenPtr name){
 	auto& scope = scopes.back();
+	if(scope.count(name->lexeme) == 1){
+		error(name, " is already declared.");
+	}
 	scope.insert({name->lexeme, false});
 }
 
@@ -49,6 +54,13 @@ resolve_loacl_var(Expr* expr, TokenPtr name){
 	}
 }
 
+static void
+error(TokenPtr token, std::string const& msg){
+	std::string err = token->lexeme + msg;
+	throw err;
+}
+
+static void
+resolve(std::vector<std::shared_ptr<Stmt> > const& stmts);
+
 };
-
-

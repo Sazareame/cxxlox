@@ -2,6 +2,7 @@
 
 #include "stdafx.hh"
 #include "statement.hh"
+#include "token.hh"
 
 class Environ{
 public:
@@ -44,6 +45,11 @@ public:
 	Object const&
 	get_at(int dist, std::string const& name){
 		return ancestor(dist)->values[name];
+	}
+
+	void
+	assign_at(int dist, TokenPtr name, Object const& value){
+		ancestor(dist)->values.insert({name->lexeme, value});
 	}
 
 private:

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "resolver.hh"
 #include "stdafx.hh"
 #include "scanner.hh"
 #include "parser.hh"
@@ -41,6 +42,8 @@ private:
 		Parser parser(tokens);
 		try{
 			auto stmts = parser.parse();
+      // initialize Resolver
+      Resolver::resolve(stmts);
 			// std::cout << expression->ast_print();
 			// if parser error occured, stmts could contains nullptr, which may result in violation during interpreting.
 			// also, interpreter is not allowed since the script already has syntax error.

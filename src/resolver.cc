@@ -3,6 +3,13 @@
 #include "expression.hh"
 
 void
+Resolver::resolve(const std::vector<std::shared_ptr<Stmt>> &stmts){
+	for(auto const& stmt: stmts){
+		stmt->resolve();
+	}
+}
+
+void
 BlockStmt::resolve(){
 	Resolver::begin_scope();
 	for(auto const& stmt : stmts)
